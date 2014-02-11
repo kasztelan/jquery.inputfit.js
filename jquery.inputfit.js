@@ -21,7 +21,7 @@
                 return;
             }
 
-            $input.off('keyup.infputfit keydown.inputfit');
+            $input.off('keyup.infputfit keydown.inputfit', fit);
 
             var maxSize = parseFloat(settings.maxSize || $input.css('font-size'), 10);
             var width   = $input.width();
@@ -41,22 +41,25 @@
                 $input.data('inputfit-clone', clone);
             }
 
-            $input.on('keyup.inputfit keydown.inputfit', function() {
-                var $this = $(this);
-
-                clone.html($this.val().replace(/ /g, '&nbsp;'));
-
-                var ratio = width / (clone.width() || 1),
-                    currentFontSize = parseInt( $this.css('font-size'), 10 ),
-                    fontSize = Math.floor(currentFontSize * ratio);
-
-                if (fontSize > maxSize) { fontSize = maxSize; }
-                if (fontSize < settings.minSize) { fontSize = settings.minSize; }
-
-                $this.css('font-size', fontSize);
-                clone.css('font-size', fontSize);
-            });
+            $input.on('keyup.inputfit keydown.inputfit', fit);
         });
+
+
+        var fit = function() {
+            var $this = $(this);
+
+            clone.html($this.val().replace(/ /g, '&nbsp;'));
+
+            var ratio = width / (clone.width() || 1),
+                currentFontSize = parseInt( $this.css('font-size'), 10 ),
+                fontSize = Math.floor(currentFontSize * ratio);
+
+            if (fontSize > maxSize) { fontSize = maxSize; }
+            if (fontSize < settings.minSize) { fontSize = settings.minSize; }
+
+            $this.css('font-size', fontSize);
+            clone.css('font-size', fontSize);
+        }
 
         return this;
     };
